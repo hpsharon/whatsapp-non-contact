@@ -1,15 +1,21 @@
-.App {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
+/*.App {*/
+/*  text-align: center;*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*}*/
 
-.form-item{
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-}
+/*.form-item{*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  margin: 20px 0;*/
+/*}*/
 
-.form-item label{
-  margin: 0 20px;
+/*.form-item label{*/
+/*  margin: 0 20px;*/
+/*}*/
+
+
+.dropdown-menu {
+  height: 200px;
+  overflow-y: scroll;
 }

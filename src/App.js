@@ -1,21 +1,26 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import countryTelephoneCode from "country-telephone-code";
+import {Container, Row, Col, Form} from "react-bootstrap";
+import WNCDropdown from './components/WNCDropdown';
 const countriesQuery = require("countries-code");
 
 function App() {
 
   const WHATSAPP_API_URL = 'https://wa.me/';
-  const [selectedCountry, setSelectedCountry] = useState(undefined);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(undefined);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [availableCountries, setAvailableCountries] = useState([]);
 
+  useEffect(() => {
+    let availableCountries = countriesQuery.allCountriesList(),
+        mapped = Object.assign({}, ...availableCountries.map( ({alpha2, country_name_en}) => ({[alpha2]:country_name_en})));
 
-  const renderCountriesOptions = () => {
-    return countriesQuery.allCountriesList().map(({country_name_en, alpha2}) => <option key={alpha2} value={alpha2}>{country_name_en}</option>)
-  }
+    setAvailableCountries(mapped);
+  },[])
 
-  const onCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
+  const onCountryChange = (value) => {
+    setSelectedCountryCode(value);
   }
 
   const onPhoneNumberChange = (event) => {
@@ -23,26 +28,27 @@ function App() {
   }
 
   const onFormSubmit = () => {
-    window.open(WHATSAPP_API_URL + countryTelephoneCode(selectedCountry) + phoneNumber, '_blank');
+    window.open(WHATSAPP_API_URL + countryTelephoneCode(selectedCountryCode) + phoneNumber, '_blank');
   }
 
   return (
-    <div className="App">
-      <form onSubmit={onFormSubmit}>
-        <div className="form-item">
-          <label htmlFor="countryDropdown">Select Country:</label>
-          <select id="countryDropdown" onChange={onCountryChange} value={selectedCountry} >
-            <option key={null} value={undefined}>Select Country</option>
-            {renderCountriesOptions()}
-          </select>
-        </div>
-        <div className="form-item">
-          <label htmlFor="phoneNumber">Phone #:</label>
-          <input type="tel" id={"phoneNumber"} value={phoneNumber} onChange={onPhoneNumberChange} pattern={"[0-9.]+"} required/>
-        </div>
-        <input type="submit" disabled={!phoneNumber || !selectedCountry}></input>
-      </form>
-    </div>
+    <Container>
+      <Form onSubmit={onFormSubmit}>
+          <WNCDropdown
+            onClick={onCountryChange}
+            title={selectedCountryCode ? availableCountries[selectedCountryCode] : "Select Country"}
+            label={"Select Country"}
+            value={selectedCountryCode}
+            options={Object.entries(availableCountries).map( ([value, display]) => ({value, display}) )}
+          />
+        <Row>
+          <Col sm={4}><label htmlFor="phoneNumber">Phone #:</label></Col>
+          <Col sm={8}><input type="tel" id={"phoneNumber"} value={phoneNumber} onChange={onPhoneNumberChange} pattern={"[0-9.]+"} required/></Col>
+        </Row>
+        <input type="submit" disabled={!phoneNumber || !selectedCountryCode}></input>
+      </Form>
+    </Container>
+
   );
 }
 
