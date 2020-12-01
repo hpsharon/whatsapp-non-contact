@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import countryTelephoneCode from "country-telephone-code";
 import {Container, Row, Col, Form} from "react-bootstrap";
 import WNCDropdown from './components/WNCDropdown';
+import WNCInput from './components/WNCInput';
 const countriesQuery = require("countries-code");
 
 function App() {
@@ -23,8 +24,8 @@ function App() {
     setSelectedCountryCode(value);
   }
 
-  const onPhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
+  const onPhoneNumberChange = (value) => {
+    setPhoneNumber(value);
   }
 
   const onFormSubmit = () => {
@@ -32,23 +33,33 @@ function App() {
   }
 
   return (
-    <Container>
-      <Form onSubmit={onFormSubmit}>
-          <WNCDropdown
-            onClick={onCountryChange}
-            title={selectedCountryCode ? availableCountries[selectedCountryCode] : "Select Country"}
-            label={"Select Country"}
-            value={selectedCountryCode}
-            options={Object.entries(availableCountries).map( ([value, display]) => ({value, display}) )}
-          />
-        <Row>
-          <Col sm={4}><label htmlFor="phoneNumber">Phone #:</label></Col>
-          <Col sm={8}><input type="tel" id={"phoneNumber"} value={phoneNumber} onChange={onPhoneNumberChange} pattern={"[0-9.]+"} required/></Col>
-        </Row>
-        <input type="submit" disabled={!phoneNumber || !selectedCountryCode}></input>
-      </Form>
-    </Container>
+    <Container fluid>
+      <Row>
+        <Col></Col>
+        <Col>
+          <Form onSubmit={onFormSubmit}>
+            <WNCDropdown
+              onClick={onCountryChange}
+              title={selectedCountryCode ? availableCountries[selectedCountryCode] : "Select Country"}
+              label={"Select Country"}
+              value={selectedCountryCode}
+              options={Object.entries(availableCountries).map( ([value, display]) => ({value, display}) )}
+            />
+            <WNCInput
+              value={phoneNumber}
+              pattern={"[0-9.]+"}
+              onChange={onPhoneNumberChange}
+              type={"tel"}
+              required={true}
+              label={"Phone #:"}
+            />
+            {/*<input type="submit" disabled={!phoneNumber || !selectedCountryCode}></input>*/}
+          </Form>
+        </Col>
+        <Col></Col>
+      </Row>
 
+    </Container>
   );
 }
 

@@ -12,7 +12,7 @@ const WNCDropdown = ({title, options, label, onClick}) => {
   }
 
   return (
-    <Form.Group as={Row} controlId="formHorizontalEmail">
+    <Form.Group as={Row} controlId={label}>
       <Form.Label column sm={2}>
         {label}
       </Form.Label>
